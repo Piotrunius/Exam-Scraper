@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+wyniki/
+_tmp.har
+_chrome_profile/
+.DS_Store
+*.log
