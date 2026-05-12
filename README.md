@@ -69,9 +69,6 @@ python3 scrape_exam.py
 ---
 
 ## 📂 Struktura Wyników
-
-Narzędzie rygorystycznie dba o wojskowy porządek na dysku. Dla każdego egzaminu tworzy osobny, jednoznacznie oznaczony katalog (np. `Chemia_Egzamin-testowy_ID31_20260512-160808` w folderze `wyniki/`).
-
 Wygenerowana struktura:
 ```text
 Wyniki/Chemia_Egzamin_ID31.../
