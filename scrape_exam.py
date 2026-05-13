@@ -6,7 +6,6 @@ screenshoty, HAR, HTML. Generuje prompt AI do rozwiązania.
 """
 
 import json
-import os
 import re
 import shutil
 import sys
@@ -202,7 +201,7 @@ def process_tasks(page, out, structure):
                     (tdir / fn).write_bytes(r.body())
                     img_files.append(fn)
                     ok(f"Zdjęcie zapisane: {fn}")
-            except:
+            except Exception:
                 pass
 
         # Dropdowns
@@ -253,7 +252,7 @@ def process_tasks(page, out, structure):
                     page.evaluate(
                         "() => document.querySelector('.cdk-overlay-backdrop')?.click()"
                     )
-                except:
+                except Exception:
                     pass
                 page.wait_for_timeout(200)
 
@@ -304,7 +303,7 @@ def process_tasks(page, out, structure):
                 path=str(tdir / "Zrzut_ekranu_zadania.png"), full_page=False
             )
             ok("Zapisano zrzut ekranu zadania")
-        except:
+        except Exception:
             pass
 
         tasks_data.append(
@@ -357,7 +356,7 @@ def capture_screenshots(page, out):
         try:
             page.screenshot(path=str(ss_dir / "Pelna_strona.png"), full_page=True)
             files.append("Pelna_strona.png")
-        except:
+        except Exception:
             pass
     except Exception as e:
         warn(str(e)[:60])
@@ -372,71 +371,71 @@ def generate_ai_prompt(structure, tasks_data, out):
     exam_type = structure["examType"] or "Egzamin"
 
     prompt_lines = [
-        f"# INSTRUKCJA DLA AI: ROZWIĄŻ EGZAMIN",
-        f"",
+        "# INSTRUKCJA DLA AI: ROZWIĄŻ EGZAMIN",
+        "",
         f"Jesteś ekspertem w dziedzinie: **{subject}**. Twoim celem jest bezbłędne i naturalne rozwiązanie poniższego egzaminu ({exam_type}).",
-        f"Dla każdego zadania przeanalizuj dostępne materiały (treść, dostępne opcje do wyboru, zdjęcia i podpowiedzi).",
-        f"",
-        f"## WYMAGANY FORMAT ODPOWIEDZI",
-        f"Odpowiedzi muszą być ABSOLUTNIE JEDNOZNACZNE. Zawsze używaj formatu z numerem opcji (który masz podany w nawiasach kwadratowych obok opcji).",
-        f"",
-        f"⚠️ BARDZO WAŻNA ZASADA: ⚠️",
-        f"1. BEZWZGLĘDNIE ZABRANIAM używania formatowania matematycznego LaTeX (żadnych znaków $, \\frac, \\cdot, itp.). Używaj tylko najzwyklejszych znaków z klawiatury (np. 1/2 zamiast ułamka, 'razy' lub * zamiast kropki). Odpowiedzi mają być proste i czyste, bez dziwnych znaków.",
-        f"2. BĄDŹ EKSTREMALNIE DOKŁADNY: Zawsze upewnij się, że przypisany przez Ciebie numer opcji (np. Opcja 3) w 100% odpowiada tekstowi z listy opcji przypisanej do tej luki! Nie wybieraj złego numeru do dobrego tekstu. Nie zmyślaj odpowiedzi – wybieraj TYLKO te podane na liście dla danej luki i weryfikuj poprzez sprawdzenie odpowiedniego zdjęcia.",
-        f"3. ZERO HALUCYNACJI: Zawsze wybieraj opcję, która jest na liście i jest zgodna z tekstem. Nie wybieraj opcji, która nie jest na liście ani nie jest zgodna z tekstem. Weryfikuj zawsze odpowiednią opcję na podstawie tekstu z listy i zdjęcia.",
-        f"4. UPEWNIAJ SIĘ ŻE WSZYSTKIE OPCJE ZOSTANĄ POPRAWNIE ZAZNACZONE: niektóre zadania mają opcję zaznaczenia wielu odpowiedzi, analizuj je, a w razie czego daj uzytkownikowi informację że jest możliwość zaznaczenia wielu odpowiedzi (jeśli jakieś pasują jeszcze ale nie podałeś ich)",
-        f"",
-        f"Dla każdego zadania z listami rozwijanymi podaj wybrane opcje dokładnie w tym formacie:",
-        f"Luka 1: **Opcja [NUMER]** (Zwykły tekst opcji z listy)  --->  KONTEKST: [Zacytuj fragment zdania przed luką] **[WYBRANA OPCJA]** [Zacytuj fragment zdania po luce]",
-        f"Luka 2: **Opcja [NUMER]** (Zwykły tekst opcji z listy)  --->  KONTEKST: [Zacytuj fragment zdania przed luką] **[WYBRANA OPCJA]** [Zacytuj fragment zdania po luce]",
-        f"",
-        f"Przykład:",
-        f"Luka 1: **Opcja 3** (2x + 2)  --->  KONTEKST: Wzór tej funkcji liniowej to f(x) = **2x + 2** dla wszystkich argumentów.",
-        f"Luka 2: **Opcja 1** (<)  --->  KONTEKST: Z wykresu odczytujemy, że współczynnik kierunkowy a jest **<** od zera.",
-        f"",
-        f"To BARDZO WAŻNE: podawanie kontekstu zdania ułatwia odnalezienie luki, zwłaszcza gdy opcja to tylko jeden znak (np. <, >).",
-        f"Jeśli masz tabelę Prawda/Fałsz z listami rozwijanymi, jako kontekst po prostu napisz pełne zdanie z tabeli, a jako opcję Prawda lub Fałsz.",
-        f"Zawsze na samym początku pogrubiaj NUMER OPCJI (np. **Opcja 2**).",
-        f"",
-        f"Na końcu podaj krótkie (max 2 zdania) uzasadnienie logiczne (również ZWYKŁYM TEKSTEM, zero LaTeXa!).",
-        f"",
-        f"---\n",
+        "Dla każdego zadania przeanalizuj dostępne materiały (treść, dostępne opcje do wyboru, zdjęcia i podpowiedzi).",
+        "",
+        "## WYMAGANY FORMAT ODPOWIEDZI",
+        "Odpowiedzi muszą być ABSOLUTNIE JEDNOZNACZNE. Zawsze używaj formatu z numerem opcji (który masz podany w nawiasach kwadratowych obok opcji).",
+        "",
+        "⚠️ BARDZO WAŻNA ZASADA: ⚠️",
+        "1. BEZWZGLĘDNIE ZABRANIAM używania formatowania matematycznego LaTeX (żadnych znaków $, \\frac, \\cdot, itp.). Używaj tylko najzwyklejszych znaków z klawiatury (np. 1/2 zamiast ułamka, 'razy' lub * zamiast kropki). Odpowiedzi mają być proste i czyste, bez dziwnych znaków.",
+        "2. BĄDŹ EKSTREMALNIE DOKŁADNY: Zawsze upewnij się, że przypisany przez Ciebie numer opcji (np. Opcja 3) w 100% odpowiada tekstowi z listy opcji przypisanej do tej luki! Nie wybieraj złego numeru do dobrego tekstu. Nie zmyślaj odpowiedzi – wybieraj TYLKO te podane na liście dla danej luki i weryfikuj poprzez sprawdzenie odpowiedniego zdjęcia.",
+        "3. ZERO HALUCYNACJI: Zawsze wybieraj opcję, która jest na liście i jest zgodna z tekstem. Nie wybieraj opcji, która nie jest na liście ani nie jest zgodna z tekstem. Weryfikuj zawsze odpowiednią opcję na podstawie tekstu z listy i zdjęcia.",
+        "4. UPEWNIAJ SIĘ ŻE WSZYSTKIE OPCJE ZOSTANĄ POPRAWNIE ZAZNACZONE: niektóre zadania mają opcję zaznaczenia wielu odpowiedzi, analizuj je, a w razie czego daj uzytkownikowi informację że jest możliwość zaznaczenia wielu odpowiedzi (jeśli jakieś pasują jeszcze ale nie podałeś ich)",
+        "",
+        "Dla każdego zadania z listami rozwijanymi podaj wybrane opcje dokładnie w tym formacie:",
+        "Luka 1: **Opcja [NUMER]** (Zwykły tekst opcji z listy)  --->  KONTEKST: [Zacytuj fragment zdania przed luką] **[WYBRANA OPCJA]** [Zacytuj fragment zdania po luce]",
+        "Luka 2: **Opcja [NUMER]** (Zwykły tekst opcji z listy)  --->  KONTEKST: [Zacytuj fragment zdania przed luką] **[WYBRANA OPCJA]** [Zacytuj fragment zdania po luce]",
+        "",
+        "Przykład:",
+        "Luka 1: **Opcja 3** (2x + 2)  --->  KONTEKST: Wzór tej funkcji liniowej to f(x) = **2x + 2** dla wszystkich argumentów.",
+        "Luka 2: **Opcja 1** (<)  --->  KONTEKST: Z wykresu odczytujemy, że współczynnik kierunkowy a jest **<** od zera.",
+        "",
+        "To BARDZO WAŻNE: podawanie kontekstu zdania ułatwia odnalezienie luki, zwłaszcza gdy opcja to tylko jeden znak (np. <, >).",
+        "Jeśli masz tabelę Prawda/Fałsz z listami rozwijanymi, jako kontekst po prostu napisz pełne zdanie z tabeli, a jako opcję Prawda lub Fałsz.",
+        "Zawsze na samym początku pogrubiaj NUMER OPCJI (np. **Opcja 2**).",
+        "",
+        "Na końcu podaj krótkie (max 2 zdania) uzasadnienie logiczne (również ZWYKŁYM TEKSTEM, zero LaTeXa!).",
+        "",
+        "---\n",
     ]
 
     for t in tasks_data:
         prompt_lines.append(f"### ZADANIE {t['num']}")
-        prompt_lines.append(f"")
+        prompt_lines.append("")
 
         text_preview = t["text"].replace("\n", " ")[:400]
         prompt_lines.append(f"**Treść:** {text_preview}...")
-        prompt_lines.append(f"")
+        prompt_lines.append("")
 
         if t["dropdowns"]:
             prompt_lines.append(
-                f"**Dostępne opcje do wyboru (kolejno dla luk w zadaniu):**"
+                "**Dostępne opcje do wyboru (kolejno dla luk w zadaniu):**"
             )
             for dd in t["dropdowns"]:
                 num_opts = " | ".join(
                     f"[{i + 1}] {opt}" for i, opt in enumerate(dd["options"])
                 )
                 prompt_lines.append(f"- Luka nr {dd['index']}: {num_opts}")
-            prompt_lines.append(f"")
+            prompt_lines.append("")
 
         if t["images"]:
             prompt_lines.append(
                 f"**Dodatkowe materiały graficzne:** {', '.join(t['images'])}"
             )
-            prompt_lines.append(f"")
+            prompt_lines.append("")
 
         if t["hint"]:
-            prompt_lines.append(f"**Podpowiedź systemowa:** Zobacz plik Podpowiedz.png")
-            prompt_lines.append(f"")
+            prompt_lines.append("**Podpowiedź systemowa:** Zobacz plik Podpowiedz.png")
+            prompt_lines.append("")
 
         task_path = out / f"Zadanie_{t['num']}"
         prompt_lines.append(
             f"*(Pełne dane znajdziesz w folderze: {task_path.as_posix()}/ )*"
         )
-        prompt_lines.append(f"\n---\n")
+        prompt_lines.append("\n---\n")
 
     return "\n".join(prompt_lines)
 
@@ -477,10 +476,8 @@ def main():
 
         page.wait_for_timeout(2000)
         url = page.url
-        exam_id = (
-            re.search(r"/exam/(\d+)", url)
-            or type("", (), {"group": lambda s, x: "0"})()
-        ).group(1)
+        match = re.search(r"/exam/(\d+)", url)
+        exam_id = match.group(1) if match else "0"
 
         section("ANALIZA DANYCH")
         structure = extract_structure(page)
@@ -535,7 +532,7 @@ def main():
                 ok(
                     f"Ruch sieciowy zabezpieczony (pełny zapis nastąpi po zamknięciu skryptu: {har_out.stat().st_size / 1024:.0f} KB)"
                 )
-            except:
+            except Exception:
                 pass
 
         # Metadata
@@ -658,15 +655,6 @@ Otwórz plik `PROMPT_DLA_AI.md` i wklej jego treść do ChatGPT / Claude / Gemin
                 time.sleep(1)
         except (KeyboardInterrupt, PlaywrightError, Exception):
             pass
-
-        print("\nZamykanie i zapisywanie ostatecznych plików...")
-
-        # Zapisz pełny HAR po zamknięciu
-        if har_tmp.exists():
-            try:
-                shutil.copy(har_tmp, har_out)
-            except:
-                pass
 
 
 if __name__ == "__main__":
