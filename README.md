@@ -92,3 +92,22 @@ Wyniki/Chemia_Egzamin_ID31.../
 
 Cały kod pod spodem został wyciśnięty do granic pod kątem spięcia go z aplikacjami odpalanymi na surowych CLI (jak `gemini-cli`).
 Otwórz wygenerowany `PROMPT_DLA_AI.md`, rzuć jego zawartością do prompta i obserwuj jak LLM radzi sobie z formatowaniem bez wariowania przy matematyce, rzucając konkretne numerki i dobudowując dla Ciebie czytelny **kontekst**. Zero szukania, zero pomyłek.
+
+---
+
+## ⚖️ Disclaimer i Odpowiedzialność Prawna
+
+**Niniejsze narzędzie zostało stworzone wyłącznie w celach edukacyjnych oraz badawczych (Proof of Concept)**, mających na celu demonstrację mechanizmów automatyzacji i testowania interfejsów webowych.
+
+### Autor repozytorium nie ponosi odpowiedzialności za:
+
+1. **Sposób, w jaki oprogramowanie zostanie wykorzystane przez użytkowników końcowych.**
+2. **Naruszenia warunków świadczenia usług (Terms of Service)**, regulaminów platform e-learningowych oraz statutów placówek edukacyjnych.
+3. **Konsekwencje dyscyplinarne, prawne lub administracyjne** (np. blokady kont, unieważnienie wyników) wynikające z użycia skryptu.
+4. **Ewentualne naruszenia praw autorskich** związane z pobieraniem i archiwizowaniem własności intelektualnej stron trzecich.
+
+### Warunki Użytkowania
+
+Oprogramowanie jest udostępniane **"tak jak jest" (as-is)**, bez żadnych gwarancji. Korzystanie z narzędzia odbywa się na **wyłączne ryzyko użytkownika**.
+
+> ⚠️ **Ważne:** Przed użyciem tego narzędzia zapoznaj się z regulaminem platformy, na której go zamierzasz zastosować. Nieautoryzowana automatyzacja może stanowić naruszenie warunków użytkowania i prawo. Autor nie odpowiada za konsekwencje tego użytku.
